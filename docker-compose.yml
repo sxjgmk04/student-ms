@@ -1,0 +1,56 @@
+name: student-ms
+
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: student_ms
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  backend:
+    build:
+      context: ./server-spring
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DB: student_ms
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      JWT_SECRET: please-use-a-long-random-secret-key-ok-for-thesis-demo
+      CORS_ALLOWED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+      # 国内大模型（OpenAI 兼容）。示例：硅基流动 / DeepSeek / 豆包(须同时设 AI_MODEL=ep-…)
+      # AI_ENABLED: "true"
+      # AI_PRESET: siliconflow
+      # AI_API_KEY: ...
+      # AI_PRESET: deepseek
+      # AI_PRESET: doubao
+      # AI_MODEL: ep-xxxx
+    ports:
+      - "3000:3000"
+
+  web:
+    build:
+      context: .
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql_data:
+

@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+server-spring/uploads
+dist-ssr
+server-spring/target
+**/target
+.cursor
+*.local
+coverage
+.cache
+*.tmp
+*.temp
+*.pid
+
+# Env（示例用 .env.example，勿提交真实 .env）
+server-spring/local-ai.env
+.env
+.env.production
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,44 @@
+server:
+  port: ${PORT:3000}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+      resolve-lazily: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:student_ms}?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+app:
+  upload-dir: ${APP_UPLOAD_DIR:uploads}
+  ai:
+    # 为 true 且配置 api-key 后，政策问答与异动 AI 辅助才会调用模型（OpenAI 兼容 /chat/completions）
+    enabled: ${AI_ENABLED:false}
+    # 国内常用：siliconflow、deepseek、dashscope（百炼）、doubao 或 ark（火山方舟豆包，须另设 AI_MODEL=ep-…）；留空=自定义
+    preset: ${AI_PRESET:}
+    base-url: ${AI_BASE_URL:https://api.openai.com/v1}
+    api-key: ${AI_API_KEY:}
+    model: ${AI_MODEL:gpt-4o-mini}
+  jwt:
+    secret: ${JWT_SECRET:student-ms-dev-secret-change-me-use-at-least-256-bits-in-production-please}
+    expiration-ms: ${JWT_EXPIRATION_MS:7200000}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080}
+  analytics:
+    rules:
+      high-avg-threshold: ${ANALYTICS_HIGH_AVG_THRESHOLD:68}
+      medium-avg-threshold: ${ANALYTICS_MEDIUM_AVG_THRESHOLD:75}
+      fail-score-line: ${ANALYTICS_FAIL_SCORE_LINE:60}
+      high-risk-fail-count: ${ANALYTICS_HIGH_RISK_FAIL_COUNT:2}
+      medium-risk-fail-count: ${ANALYTICS_MEDIUM_RISK_FAIL_COUNT:1}
